@@ -12,6 +12,9 @@ public class ClientInfo {
     private Long id;
 
     @Column
+    private String clientName;
+
+    @Column
     private String companyName;
 
     @Column

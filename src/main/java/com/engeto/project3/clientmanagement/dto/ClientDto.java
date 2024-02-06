@@ -15,12 +15,16 @@ public class ClientDto {
     private Long id;
 
     @Size(max = 255)
+    private String clientName;
+
+    @Size(max = 255)
     private String companyName;
 
     @Size(max = 255)
     private String address;
 
-    public ClientDto(String companyName, String address) {
+    public ClientDto(String clientName, String companyName, String address) {
+        this.clientName = clientName;
         this.companyName = companyName;
         this.address = address;
     }
