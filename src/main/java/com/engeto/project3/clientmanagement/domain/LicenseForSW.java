@@ -7,7 +7,10 @@ import lombok.Data;
 @Entity
 public class LicenseForSW {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "primary_sequence"
+    )
     private Long id;
 
     @Column

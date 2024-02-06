@@ -8,7 +8,10 @@ import lombok.Data;
 @Table(name = "ClientInfo")
 public class ClientInfo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "primary_sequence"
+    )
     private Long id;
 
     @Column
