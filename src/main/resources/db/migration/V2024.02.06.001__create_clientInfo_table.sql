@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS ClientInfo
+CREATE TABLE IF NOT EXISTS Client_Info
 (
     id          BIGINT NOT NULL AUTO_INCREMENT,
     clientName  VARCHAR(255),

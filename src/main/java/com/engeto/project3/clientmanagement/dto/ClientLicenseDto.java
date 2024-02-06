@@ -17,8 +17,5 @@ public class ClientLicenseDto {
 
     private String licenseKey;
 
-    public boolean isActive() {
-        return false;
-    }
-
+    public boolean isActive;
 }

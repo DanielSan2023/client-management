@@ -1,12 +1,17 @@
 package com.engeto.project3.clientmanagement.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "Client_License")
 public class ClientLicense {
 
     @EmbeddedId

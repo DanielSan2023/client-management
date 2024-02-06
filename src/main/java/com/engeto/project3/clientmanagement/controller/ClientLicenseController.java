@@ -1,5 +1,6 @@
 package com.engeto.project3.clientmanagement.controller;
 
+import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
 import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
 import com.engeto.project3.clientmanagement.service.ClientLicenseService;
@@ -34,8 +35,8 @@ public class ClientLicenseController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<ClientLicenseDto>> fetchAllClientLicence() {
-        List<ClientLicenseDto> activeClientLicense = clientLicenseService.getAllClient();
+    public ResponseEntity<List<ClientLicense>> fetchAllClientLicence() {
+        List<ClientLicense> activeClientLicense = clientLicenseService.getAllClient();
         if (CollectionUtils.isEmpty(activeClientLicense)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

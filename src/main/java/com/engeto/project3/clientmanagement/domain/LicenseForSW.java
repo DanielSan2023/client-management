@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "License_For_Sw")
 public class LicenseForSW {
     @Id
     @GeneratedValue(

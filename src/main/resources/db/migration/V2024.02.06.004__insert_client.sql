@@ -1,10 +1,2 @@
-INSERT INTO DEPARTMENT(ID, NAME)
-VALUES (1, 'Technology consulting');
-INSERT INTO DEPARTMENT(ID, NAME)
-VALUES (2, 'Quality assurance');
-INSERT INTO DEPARTMENT(ID, NAME)
-VALUES (3, 'Human resources');
-INSERT INTO DEPARTMENT(ID, NAME)
-VALUES (4, 'Managed services');
-INSERT INTO DEPARTMENT(ID, NAME)
-VALUES (5, 'Management');
+INSERT INTO Client_Info (id, clientName, companyName, address)
+VALUES (1, 'John Doe', 'ABC Company', '123 Main Street');

@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS ClientLicense
+CREATE TABLE IF NOT EXISTS Client_License
 (
-    client_id  BIGINT   NOT NULL,
-    license_id BIGINT   NOT NULL,
-    START_DATE DATETIME NOT NULL,
-    CONSTRAINT pk_client_license PRIMARY KEY (client_id, license_id)
+    ClientInfo_id BIGINT   NOT NULL,
+    License_id    BIGINT   NOT NULL,
+    START_DATE    DATETIME NOT NULL,
+    CONSTRAINT pk_client_license PRIMARY KEY (ClientInfo_id, License_id)
 );
