@@ -22,10 +22,4 @@ public class ClientDto {
 
     @Size(max = 255)
     private String address;
-
-    public ClientDto(String clientName, String companyName, String address) {
-        this.clientName = clientName;
-        this.companyName = companyName;
-        this.address = address;
-    }
 }

@@ -20,6 +20,7 @@ public class ClientLicenseId implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(name = "License_id")
+    @JoinColumn(name = "LICENSE_ID")
     private LicenseForSW license;
+
 }

@@ -1,11 +1,15 @@
 package com.engeto.project3.clientmanagement.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
 @Entity
-@Table(name = "License_For_Sw")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "LICENSE_FOR_SW")
 public class LicenseForSW {
     @Id
     @GeneratedValue(
@@ -19,4 +23,9 @@ public class LicenseForSW {
 
     @Column
     private String licenseKey;
+
+    public LicenseForSW(String softwareName, String licenseKey) {
+        this.softwareName = softwareName;
+        this.licenseKey = licenseKey;
+    }
 }

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Client_License")
+@Table(name = "CLIENT_LICENSE")
 public class ClientLicense {
 
     @EmbeddedId
-    private ClientLicenseId id;
+    private ClientLicenseId clientlicenseId;
 
     @Column(name = "START_DATE", nullable = false)
     private LocalDateTime startDate;

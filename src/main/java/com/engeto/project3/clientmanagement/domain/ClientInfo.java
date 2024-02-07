@@ -1,12 +1,21 @@
 package com.engeto.project3.clientmanagement.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "Client_Info")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "CLIENT_INFO")
 public class ClientInfo {
+    transient EntityManager entityManager;
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -22,5 +31,11 @@ public class ClientInfo {
 
     @Column
     private String address;
+
+    public ClientInfo(String clientName, String companyName, String address) {
+        this.clientName = clientName;
+        this.companyName = companyName;
+        this.address = address;
+    }
 
 }

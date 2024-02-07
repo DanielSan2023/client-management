@@ -1,12 +1,16 @@
 package com.engeto.project3.clientmanagement.service;
 
+import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
+import com.engeto.project3.clientmanagement.domain.LicenseForSW;
 import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.domain.Sort;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,12 +21,15 @@ import java.util.stream.Collectors;
 public class ClientLicenseService {
     final private ClientLicenseRepository clientLicenseRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public ClientLicenseService(ClientLicenseRepository clientLicenseRepository) {
         this.clientLicenseRepository = clientLicenseRepository;
     }
 
     public ClientLicenseDto getClientLicenseById(ClientLicenseId id) {
-        ClientLicense clientLicense = findById(id);
+        ClientLicense clientLicense = clientLicenseRepository.findByClientlicenseId(id);
         if (clientLicense == null) {
             throw new EntityNotFoundException("Client with Id ( " + id + ") not found.");
         }
@@ -31,9 +38,9 @@ public class ClientLicenseService {
 
     private static ClientLicenseDto convertToDto(ClientLicense client) {
         ClientLicenseDto clientLicenseDto = new ClientLicenseDto();
-        clientLicenseDto.setName(client.getId().getClient().getClientName());
-        clientLicenseDto.setSoftwareName(client.getId().getLicense().getSoftwareName());
-        clientLicenseDto.setLicenseKey(client.getId().getLicense().getLicenseKey());
+        clientLicenseDto.setName(client.getClientlicenseId().getClient().getClientName());
+        clientLicenseDto.setSoftwareName(client.getClientlicenseId().getLicense().getSoftwareName());
+        clientLicenseDto.setLicenseKey(client.getClientlicenseId().getLicense().getLicenseKey());
         clientLicenseDto.setActive(checkExpiration(client));
         return clientLicenseDto;
     }
@@ -48,15 +55,25 @@ public class ClientLicenseService {
     }
 
 
-    private ClientLicense findById(ClientLicenseId id) {
-        return clientLicenseRepository.findClientLicenseById(id);
+    public List<ClientLicenseDto> getAllClient() {
+        List<ClientLicense> clientsLicenses = clientLicenseRepository.findAll();
+        List<ClientLicenseDto> clientsLicensesDto = clientsLicenses.stream()
+                .map(ClientLicenseService::convertToDto)
+                .collect(Collectors.toList());
+        return clientsLicensesDto;
     }
 
-    public List<ClientLicense> getAllClient() {
-        //        List<ClientLicense> clientsLicensesDto = clientLicensesList.stream()
-//                .map(ClientLicenseService::convertToDto)
-//                .collect(Collectors.toList());
-        return clientLicenseRepository.findAll();
+    @Transactional
+    public void saveClientLicense() {
+        ClientLicense clientLicense;
+
+        ClientInfo client = new ClientInfo("Jenny", "IBM", "LA");
+        LicenseForSW license = new LicenseForSW("Windows", "someKey");
+        entityManager.persist(client);
+        entityManager.persist(license);
+
+        clientLicense = (new ClientLicense(new ClientLicenseId(client, license), LocalDateTime.now()));
+        clientLicenseRepository.save(clientLicense);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.engeto.project3.clientmanagement.controller;
 
+import com.engeto.project3.clientmanagement.converter.StringToClientLicenseIdConverter;
+import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
 import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
@@ -7,10 +9,7 @@ import com.engeto.project3.clientmanagement.service.ClientLicenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,14 +18,18 @@ import java.util.List;
 public class ClientLicenseController {
 
     final private ClientLicenseService clientLicenseService;
+    final private StringToClientLicenseIdConverter stringToClientLicenseIdConverter;
 
-    public ClientLicenseController(ClientLicenseService clientLicenseService) {
+    public ClientLicenseController(ClientLicenseService clientLicenseService, StringToClientLicenseIdConverter stringToClientLicenseIdConverter) {
         this.clientLicenseService = clientLicenseService;
+        this.stringToClientLicenseIdConverter = stringToClientLicenseIdConverter;
     }
 
-    @GetMapping("/{clientId}")
-    public ResponseEntity<ClientLicenseDto> fetchClientLicenseById(@PathVariable ClientLicenseId clientId) {
-        ClientLicenseDto clientLicenseDto = clientLicenseService.getClientLicenseById(clientId);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientLicenseDto> fetchClientLicenseById(@PathVariable String id) {
+        ClientLicenseId ids = stringToClientLicenseIdConverter.convert(id);
+        ClientLicenseDto clientLicenseDto = clientLicenseService.getClientLicenseById(ids);
         if (clientLicenseDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -34,14 +37,21 @@ public class ClientLicenseController {
         }
     }
 
+    @PostMapping("/save")
+    public void saveLicense() {
+        clientLicenseService.saveClientLicense();
+    }
+
+
     @GetMapping("/active")
-    public ResponseEntity<List<ClientLicense>> fetchAllClientLicence() {
-        List<ClientLicense> activeClientLicense = clientLicenseService.getAllClient();
+    public ResponseEntity<List<ClientLicenseDto>> fetchAllClientLicence() {
+        List<ClientLicenseDto> activeClientLicense = clientLicenseService.getAllClient();
         if (CollectionUtils.isEmpty(activeClientLicense)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(activeClientLicense, HttpStatus.OK);
         }
     }
+
 
 }
