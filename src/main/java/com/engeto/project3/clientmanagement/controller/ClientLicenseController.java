@@ -25,7 +25,6 @@ public class ClientLicenseController {
         this.stringToClientLicenseIdConverter = stringToClientLicenseIdConverter;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<ClientLicenseDto> fetchClientLicenseById(@PathVariable String id) {
         ClientLicenseId ids = stringToClientLicenseIdConverter.convert(id);
@@ -42,6 +41,12 @@ public class ClientLicenseController {
         clientLicenseService.saveClientLicense();
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<ClientLicenseDto> createLicenseForClient(@RequestBody ClientLicenseDto clientLicenseDto) {
+        ClientLicenseDto createdLicenseDto = clientLicenseService.createLicense(clientLicenseDto);
+        return new ResponseEntity<>(createdLicenseDto, HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/active")
     public ResponseEntity<List<ClientLicenseDto>> fetchAllClientLicence() {
@@ -52,6 +57,5 @@ public class ClientLicenseController {
             return new ResponseEntity<>(activeClientLicense, HttpStatus.OK);
         }
     }
-
 
 }

@@ -10,6 +10,9 @@ public interface ClientLicenseRepository extends JpaRepository<ClientLicense, Cl
 
  ClientLicense findByClientlicenseId(ClientLicenseId id);
 
+ ClientLicense findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(String clientName, String softwareName);
+
+
 }
 
 
