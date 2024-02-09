@@ -8,4 +8,6 @@ import org.springframework.stereotype.Component;
 public interface ClientInfoRepository extends JpaRepository<ClientInfo, Long> {
 
     ClientInfo findByClientName(String name);
+
+    boolean existsByClientName(String name);
 }
