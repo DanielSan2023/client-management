@@ -36,17 +36,11 @@ public class ClientLicenseController {
         }
     }
 
-    @PostMapping("/save")
-    public void saveLicense() {
-        clientLicenseService.saveClientLicense();
-    }
-
     @PostMapping("/create")
     public ResponseEntity<ClientLicenseDto> createLicenseForClient(@RequestBody ClientLicenseDto clientLicenseDto) {
         ClientLicenseDto createdLicenseDto = clientLicenseService.createLicense(clientLicenseDto);
         return new ResponseEntity<>(createdLicenseDto, HttpStatus.CREATED);
     }
-
 
     @GetMapping("/active")
     public ResponseEntity<List<ClientLicenseDto>> fetchAllClientLicence() {
@@ -56,6 +50,11 @@ public class ClientLicenseController {
         } else {
             return new ResponseEntity<>(activeClientLicense, HttpStatus.OK);
         }
+    }
+
+    @DeleteMapping("/{clientName}/{swName}")
+    public void deleteClientLicenseByNameAndSwName(@PathVariable String clientName, @PathVariable String swName) {
+        clientLicenseService.deleteClientLicenseByNameAndSwName(clientName, swName);
     }
 
 }

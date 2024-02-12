@@ -8,12 +8,14 @@ import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
 import com.engeto.project3.clientmanagement.repository.AESEncryptionDecryption;
 import com.engeto.project3.clientmanagement.repository.ClientInfoRepository;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
+import com.engeto.project3.clientmanagement.repository.LicenseForSwRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -23,13 +25,16 @@ import java.util.stream.Collectors;
 public class ClientLicenseService {
     final private ClientLicenseRepository clientLicenseRepository;
     final private ClientInfoRepository clientInfoRepository;
+    final private LicenseForSwRepository licenseRepository;
+
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository) {
+    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository) {
         this.clientLicenseRepository = clientLicenseRepository;
         this.clientInfoRepository = clientInfoRepository;
+        this.licenseRepository = licenseRepository;
     }
 
     public ClientLicenseDto getClientLicenseById(ClientLicenseId id) {
@@ -58,22 +63,9 @@ public class ClientLicenseService {
     }
 
     @Transactional
-    public void saveClientLicense() {
-        ClientLicense clientLicense;
-        ClientInfo client = new ClientInfo("Jenny", "IBM", "LA");
-        LicenseForSW license = new LicenseForSW("Windows", "someKey");
-        entityManager.persist(client);
-        entityManager.persist(license);
-
-        clientLicense = (new ClientLicense(new ClientLicenseId(client, license), LocalDateTime.now()));
-        clientLicenseRepository.save(clientLicense);
-    }
-
-    @Transactional
     public ClientLicenseDto createLicense(ClientLicenseDto clientLicenseDto) {
-
         validationClientLicenseDto(clientLicenseDto);
-        System.out.println("clientName :" +clientLicenseDto.getName());
+        System.out.println("clientName :" + clientLicenseDto.getName());
         ClientInfo validatedClient = validationClient(clientLicenseDto.getName());
 
 
@@ -88,7 +80,7 @@ public class ClientLicenseService {
     private LicenseForSW createLicensekeyForSw(String clientName, String softwareName) {
         LicenseForSW licenseKey = new LicenseForSW();
         licenseKey.setSoftwareName(softwareName);
-        String originalString = clientName + softwareName;
+        String originalString = clientName + softwareName + LocalDate.now();
         licenseKey.setLicenseKey(generateEncryptedKey(originalString));
         return licenseKey;
     }
@@ -124,5 +116,13 @@ public class ClientLicenseService {
         clientLicenseDto.setLicenseKey(existLicense.getClientlicenseId().getLicense().getLicenseKey());
         clientLicenseDto.setActive(checkExpiration(existLicense));
         return clientLicenseDto;
+    }
+
+    @Transactional
+    public void deleteClientLicenseByNameAndSwName(String clientName, String swName) {
+        ClientLicense clientLicense = clientLicenseRepository.findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
+        Long licenseId = clientLicense.getClientlicenseId().getLicense().getId();
+        clientLicenseRepository.deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
+        licenseRepository.deleteById(licenseId);
     }
 }
