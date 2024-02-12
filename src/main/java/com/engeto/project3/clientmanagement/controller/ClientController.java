@@ -35,4 +35,21 @@ public class ClientController {
             return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{clientName}")
+    public ResponseEntity<ClientDto> updateClientByClientName(@PathVariable String clientName, @RequestBody ClientDto clientDto) {
+        if (clientInfoRepository.findByClientName(clientName) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            ClientDto updatedClient = clientInfoService.updateClientByName(clientName, clientDto);
+            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+        }
+    }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<HttpStatus> deleteClient(@PathVariable String name) {
+        ClientInfo deletedClient = clientInfoService.deleteClient(name);
+        if (deletedClient == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 }
