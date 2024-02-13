@@ -1,5 +1,7 @@
 package com.engeto.project3.clientmanagement.repository;
 
+import org.springframework.stereotype.Component;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -7,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
-
+@Component
 public class AESEncryptionDecryption {
     private static SecretKeySpec secretKey;
     private static byte[] key;
