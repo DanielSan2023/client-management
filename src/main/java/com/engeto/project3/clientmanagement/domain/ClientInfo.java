@@ -3,9 +3,6 @@ package com.engeto.project3.clientmanagement.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -32,10 +29,13 @@ public class ClientInfo {
     @Column
     private String address;
 
-    public ClientInfo(String clientName, String companyName, String address) {
+    @Column
+    private String email;
+
+    public ClientInfo(String clientName, String companyName, String address, String email) {
         this.clientName = clientName;
         this.companyName = companyName;
         this.address = address;
+        this.email = email;
     }
-
 }

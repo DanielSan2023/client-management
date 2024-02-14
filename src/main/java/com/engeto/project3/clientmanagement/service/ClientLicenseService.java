@@ -26,15 +26,16 @@ public class ClientLicenseService {
     final private ClientLicenseRepository clientLicenseRepository;
     final private ClientInfoRepository clientInfoRepository;
     final private LicenseForSwRepository licenseRepository;
-
+    private AESEncryptionDecryption encryptDecrypt;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository) {
+    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository, AESEncryptionDecryption encryptDecrypt) {
         this.clientLicenseRepository = clientLicenseRepository;
         this.clientInfoRepository = clientInfoRepository;
         this.licenseRepository = licenseRepository;
+        this.encryptDecrypt = encryptDecrypt;
     }
 
     public ClientLicenseDto getClientLicenseById(ClientLicenseId id) {
@@ -87,7 +88,6 @@ public class ClientLicenseService {
 
     private String generateEncryptedKey(String originalString) {
         String secretKey = "secrete";
-        AESEncryptionDecryption encryptDecrypt = new AESEncryptionDecryption();
         return encryptDecrypt.encrypt(originalString, secretKey);
     }
 
@@ -124,5 +124,10 @@ public class ClientLicenseService {
         Long licenseId = clientLicense.getClientlicenseId().getLicense().getId();
         clientLicenseRepository.deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
         licenseRepository.deleteById(licenseId);
+    }
+    public List<ClientInfo> getClientsToSendEmail() {
+        // Implementácia získania klientov, ktorým treba poslať email
+        // Napríklad z databázy alebo iného úložiska
+        return null;
     }
 }

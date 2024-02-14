@@ -49,6 +49,7 @@ public class ClientInfoService {
         ClientInfo client = clientInfoRepository.findByClientName(clientName);
         client.setCompanyName(clientDto.getCompanyName());
         client.setAddress(clientDto.getAddress());
+        client.setEmail(clientDto.getEmail());
         clientInfoRepository.save(client);
         return convertToDomain(client);
     }

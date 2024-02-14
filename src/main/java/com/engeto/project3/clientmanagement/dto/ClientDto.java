@@ -22,4 +22,7 @@ public class ClientDto {
 
     @Size(max = 255)
     private String address;
+
+    @Size(max = 255)
+    private String email;
 }
