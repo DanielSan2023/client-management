@@ -1,12 +1,13 @@
-package com.engeto.project3.clientmanagement.config;
+package com.engeto.project3.clientmanagement.config.email;
 
+import com.engeto.project3.clientmanagement.domain.ClientInfo;
+import com.engeto.project3.clientmanagement.domain.LicenseForSW;
 import com.engeto.project3.clientmanagement.service.ClientLicenseService;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class SendEmailStep {
 
     private final JavaMailSender javaMailSender;
@@ -22,7 +23,15 @@ public class SendEmailStep {
         message.setTo("electronic.san@gmail.com");
         message.setSubject("Your Weekly Update");
         message.setText("This is first mail.");
-        // message.setText("Dear " + client.getClientName() + ",\n\nThis is your weekly update.\n\nRegards,\nYour Company");
+
+        javaMailSender.send(message);
+    }
+
+    public void sendEmailToClient(ClientInfo client, LicenseForSW license) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(client.getEmail());
+        message.setSubject("LicenseKey");
+        message.setText("Dear " + client.getClientName() + ",\n\nThis is your weekly update for " + license.getSoftwareName() + "\n\nkey: " + license.getLicenseKey());
 
         javaMailSender.send(message);
     }

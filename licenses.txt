@@ -1,0 +1,16 @@
+Client: John Doe
+Software: Software A
+License Key: LicenseKey123
+
+Client: Jacksson
+Software: Office_16
+License Key: meROJ90WcMFL93CPHtV2GhPJCBk6Do+Jf4bhA86MDB4=
+
+Client: Jacksson
+Software: Windows_11
+License Key: MS9tr3lDhN4V5+assW133p5yakQ6VMH55iEzYyaeSaQ=
+
+Client: Jenny
+Software: Office_16
+License Key: e15kaV8+QVDHJUrNwzwl0DxldGeRA68NIWI0MzHf4ac=
+
