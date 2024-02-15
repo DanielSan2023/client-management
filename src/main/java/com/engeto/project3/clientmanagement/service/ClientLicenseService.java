@@ -5,7 +5,7 @@ import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
 import com.engeto.project3.clientmanagement.domain.LicenseForSW;
 import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
-import com.engeto.project3.clientmanagement.repository.AESEncryptionDecryption;
+import com.engeto.project3.clientmanagement.converter.AESEncryptionDecryption;
 import com.engeto.project3.clientmanagement.repository.ClientInfoRepository;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
 import com.engeto.project3.clientmanagement.repository.LicenseForSwRepository;

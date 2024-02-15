@@ -1,13 +1,10 @@
-package com.engeto.project3.clientmanagement.repository;
+package com.engeto.project3.clientmanagement.config;
 
-import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.service.ClientLicenseService;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 
 @Configuration
 public class SendEmailStep {
@@ -18,18 +15,6 @@ public class SendEmailStep {
     public SendEmailStep(JavaMailSender javaMailSender, ClientLicenseService clientLicenseService) {
         this.javaMailSender = javaMailSender;
         this.clientLicenseService = clientLicenseService;
-    }
-
-    @Bean
-    public Step sendEmailStep() {
-        return new StepBuilder("sendEmailStep")
-                .<ClientInfo, ClientInfo>chunk(10)
-                .reader(clientLicenseService.getAllClient())
-                .processor(item -> {
-                    sendEmailToClient(item);
-                    return item;
-                })
-                .build();
     }
 
     public void sendEmailToClient() {

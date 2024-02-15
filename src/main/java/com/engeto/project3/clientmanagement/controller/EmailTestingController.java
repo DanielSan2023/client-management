@@ -1,6 +1,6 @@
 package com.engeto.project3.clientmanagement.controller;
 
-import com.engeto.project3.clientmanagement.repository.SendEmailStep;
+import com.engeto.project3.clientmanagement.config.SendEmailStep;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

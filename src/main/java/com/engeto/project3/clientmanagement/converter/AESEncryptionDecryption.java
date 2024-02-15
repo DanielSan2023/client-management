@@ -1,4 +1,4 @@
-package com.engeto.project3.clientmanagement.repository;
+package com.engeto.project3.clientmanagement.converter;
 
 import org.springframework.stereotype.Component;
 

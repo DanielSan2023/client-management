@@ -3,7 +3,7 @@ package com.engeto.project3.clientmanagement.task;
 import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.LicenseForSW;
-import com.engeto.project3.clientmanagement.repository.AESEncryptionDecryption;
+import com.engeto.project3.clientmanagement.converter.AESEncryptionDecryption;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
