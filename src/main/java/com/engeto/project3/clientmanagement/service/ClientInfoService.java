@@ -5,7 +5,6 @@ import com.engeto.project3.clientmanagement.dto.ClientDto;
 import com.engeto.project3.clientmanagement.repository.ClientInfoRepository;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
 import com.engeto.project3.clientmanagement.repository.LicenseForSwRepository;
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,14 @@ public class ClientInfoService {
 
     public ClientDto createClient(ClientDto clientDto) {
         validateNewClient(clientDto);
-        ClientInfo newClientInfo = convertToDto(clientDto);
+        ClientInfo newClientInfo = convertToDomain(clientDto);
         clientInfoRepository.save(newClientInfo);
         return clientDto;
+    }
+
+    public ClientDto getClientByName(String name) {
+        ClientInfo savedClient = clientInfoRepository.findByClientName(name);
+        return convertToDto(savedClient);
     }
 
     private void validateNewClient(ClientDto clientDto) {
@@ -37,11 +41,11 @@ public class ClientInfoService {
         }
     }
 
-    private ClientInfo convertToDto(ClientDto clientDto) {
+    private ClientInfo convertToDomain(ClientDto clientDto) {
         return modelMapper.map(clientDto, ClientInfo.class);
     }
 
-    private ClientDto convertToDomain(ClientInfo client) {
+    private ClientDto convertToDto(ClientInfo client) {
         return modelMapper.map(client, ClientDto.class);
     }
 
@@ -51,7 +55,7 @@ public class ClientInfoService {
         client.setAddress(clientDto.getAddress());
         client.setEmail(clientDto.getEmail());
         clientInfoRepository.save(client);
-        return convertToDomain(client);
+        return convertToDto(client);
     }
 
     @Transactional

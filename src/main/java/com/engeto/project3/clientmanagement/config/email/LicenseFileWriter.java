@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Component
 public class LicenseFileWriter implements ItemWriter<ClientLicense> {
@@ -20,6 +21,7 @@ public class LicenseFileWriter implements ItemWriter<ClientLicense> {
     @Override
     public void write(Chunk<? extends ClientLicense> clientLicenses) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            writer.write("Current date: " + LocalDate.now() + "\n");
             for (ClientLicense clientLicense : clientLicenses) {
                 ClientLicenseId clientLicenseId = clientLicense.getClientlicenseId();
                 ClientInfo client = clientLicenseId.getClient();

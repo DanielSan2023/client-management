@@ -70,7 +70,7 @@ public class ClientLicenseService {
         ClientInfo validatedClient = validationClient(clientLicenseDto.getName());
 
 
-        LicenseForSW licenseKeyForSw = createLicensekeyForSw(clientLicenseDto.getName(), clientLicenseDto.getSoftwareName());
+        LicenseForSW licenseKeyForSw = createLicenseKeyForSw(clientLicenseDto.getName(), clientLicenseDto.getSoftwareName());
         entityManager.persist(licenseKeyForSw);
 
         ClientLicense newLicense = new ClientLicense(new ClientLicenseId(validatedClient, licenseKeyForSw), LocalDateTime.now());
@@ -78,7 +78,7 @@ public class ClientLicenseService {
         return mapClientLicenseToDto(newLicense);
     }
 
-    private LicenseForSW createLicensekeyForSw(String clientName, String softwareName) {
+    private LicenseForSW createLicenseKeyForSw(String clientName, String softwareName) {
         LicenseForSW licenseKey = new LicenseForSW();
         licenseKey.setSoftwareName(softwareName);
         String originalString = clientName + softwareName + LocalDate.now();

@@ -26,9 +26,9 @@ public class ClientController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<ClientInfo> getClientByName(@PathVariable String name) {
-        ClientInfo client;
-        client = clientInfoRepository.findByClientName(name);
+    public ResponseEntity<ClientDto> getClientByName(@PathVariable String name) {
+        ClientDto client;
+        client = clientInfoService.getClientByName(name);
         if (client == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else
@@ -49,7 +49,7 @@ public class ClientController {
     public ResponseEntity<HttpStatus> deleteClient(@PathVariable String name) {
         ClientInfo deletedClient = clientInfoService.deleteClient(name);
         if (deletedClient == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>(HttpStatus.OK);
     }
 }
