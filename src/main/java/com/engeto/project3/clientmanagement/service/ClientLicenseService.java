@@ -125,9 +125,4 @@ public class ClientLicenseService {
         clientLicenseRepository.deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
         licenseRepository.deleteById(licenseId);
     }
-    public List<ClientInfo> getClientsToSendEmail() {
-        // Implementácia získania klientov, ktorým treba poslať email
-        // Napríklad z databázy alebo iného úložiska
-        return null;
-    }
 }
