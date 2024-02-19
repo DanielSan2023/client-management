@@ -7,11 +7,11 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "CLIENT_INFO")
 public class ClientInfo {
-    transient EntityManager entityManager;
 
     @Id
     @GeneratedValue(

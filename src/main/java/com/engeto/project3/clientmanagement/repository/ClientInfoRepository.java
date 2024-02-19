@@ -10,8 +10,10 @@ public interface ClientInfoRepository extends JpaRepository<ClientInfo, Long> {
 
     ClientInfo findByClientName(String name);
 
-    boolean existsByClientName(String name);
+    boolean existsByClientNameIgnoreCase(String name);
 
     @Transactional
     void deleteByClientName(String name);
+
+    void deleteByClientNameIgnoreCase(String name);
 }

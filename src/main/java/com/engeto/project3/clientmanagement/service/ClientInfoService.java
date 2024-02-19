@@ -35,7 +35,7 @@ public class ClientInfoService {
 
     private void validateNewClient(ClientDto clientDto) {
         String newClientName = clientDto.getClientName();
-        boolean isExistClient = clientInfoRepository.existsByClientName(newClientName);
+        boolean isExistClient = clientInfoRepository.existsByClientNameIgnoreCase(newClientName);
         if (isExistClient) {
             throw new RuntimeException("Client  " + newClientName + " is already exist in DB!");
         }
