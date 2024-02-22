@@ -26,10 +26,7 @@ public class ClientLicenseService {
     final private ClientLicenseRepository clientLicenseRepository;
     final private ClientInfoRepository clientInfoRepository;
     final private LicenseForSwRepository licenseRepository;
-    private AESEncryptionDecryption encryptDecrypt;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final AESEncryptionDecryption encryptDecrypt;
 
     public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository, AESEncryptionDecryption encryptDecrypt) {
         this.clientLicenseRepository = clientLicenseRepository;
@@ -37,6 +34,9 @@ public class ClientLicenseService {
         this.licenseRepository = licenseRepository;
         this.encryptDecrypt = encryptDecrypt;
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public ClientLicenseDto getClientLicenseById(ClientLicenseId id) {
         ClientLicense clientLicense = clientLicenseRepository.findByClientlicenseId(id);
@@ -46,16 +46,16 @@ public class ClientLicenseService {
         return mapClientLicenseToDto(clientLicense);
     }
 
-    public static boolean checkExpiration(ClientLicense client) {
+    public static boolean checkExpiration(ClientLicense clientLicense) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime startDate = client.getStartDate();
+        LocalDateTime startDate = clientLicense.getStartDate();
         long monthsDifference = ChronoUnit.MONTHS.between(startDate, currentDateTime);
         boolean isActive = monthsDifference <= 2;
 
         return isActive;
     }
 
-    public List<ClientLicenseDto> getAllClient() {
+    public List<ClientLicenseDto> getAllClientLicenses() {
         List<ClientLicense> clientsLicenses = clientLicenseRepository.findAll();
         List<ClientLicenseDto> clientsLicensesDto = clientsLicenses.stream()
                 .map(ClientLicenseService::mapClientLicenseToDto)
@@ -68,7 +68,6 @@ public class ClientLicenseService {
         validationClientLicenseDto(clientLicenseDto);
         System.out.println("clientName :" + clientLicenseDto.getName());
         ClientInfo validatedClient = validationClient(clientLicenseDto.getName());
-
 
         LicenseForSW licenseKeyForSw = createLicenseKeyForSw(clientLicenseDto.getName(), clientLicenseDto.getSoftwareName());
         entityManager.persist(licenseKeyForSw);
