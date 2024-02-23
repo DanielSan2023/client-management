@@ -9,6 +9,8 @@ import com.engeto.project3.clientmanagement.dto.ClientDto;
 import com.engeto.project3.clientmanagement.dto.ClientLicenseDto;
 import com.engeto.project3.clientmanagement.repository.ClientInfoRepository;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
+import com.engeto.project3.clientmanagement.repository.LicenseForSwRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -17,17 +19,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@Transactional
 @ExtendWith(MockitoExtension.class)
 class ClientLicenseServiceTest {
     public static final LocalDateTime START_DATE_TEST = LocalDateTime.of(2015, 05, 5, 12, 00);
@@ -42,6 +47,9 @@ class ClientLicenseServiceTest {
     AESEncryptionDecryption encryptDecrypt;
 
     @Mock
+    LicenseForSwRepository licenseRepository;
+
+    @Mock
     ClientInfoRepository clientInfoRepository;
 
     @Mock
@@ -49,6 +57,7 @@ class ClientLicenseServiceTest {
 
     @InjectMocks
     private ClientLicenseService clientLicenseService;
+
 
     @Test
     void GIVEN_clientLicenseId_WHEN_getClientLicenseById_THEN_return_clientLicense() {
@@ -187,17 +196,114 @@ class ClientLicenseServiceTest {
 
         //THEN
         assertThat(returnedLicense).isNotNull();
-    }  //TODO how mock persistence.EntityManager
-
-    @Test
-    void createLicense() {
     }
 
     @Test
-    void validationClient() {
+    void GIVEN_license_exist_in_DB_WHEN_createLicense_THEN_throw_exception() {
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");
+
+        ClientLicenseDto licenseDto = new ClientLicenseDto("Jackson", "Windows", "someWindowsKey", true);
+
+        ClientLicense license = new ClientLicense();
+        license.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license.setStartDate(LocalDateTime.now());
+
+        when(clientLicenseRepository.findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(
+                client.getClientName(), licenseForSW.getSoftwareName())).thenReturn(license);
+
+        //WHEN & THEN
+        assertThatThrownBy(() -> clientLicenseService.createLicense(licenseDto))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("License is already exist in DB!");
     }
 
     @Test
-    void deleteClientLicenseByNameAndSwName() {
+    void GIVEN_license_non_exist_account_in_DB_WHEN_createLicense_THEN_throw_exception() {
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");
+
+        ClientLicenseDto licenseDto = new ClientLicenseDto("Jackson", "Windows", "someWindowsKey", true);
+
+        ClientLicense license = new ClientLicense();
+        license.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license.setStartDate(LocalDateTime.now());
+
+        //WHEN & THEN
+        assertThatThrownBy(() -> clientLicenseService.createLicense(licenseDto))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Client Jackson does not exist in database. You have to create client account!");
+    }
+
+    @Test
+    void GIVEN_client_name_WHEN_validationClient_THEN_return_client() {
+        //GIVEN
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        when(clientInfoRepository.findByClientName(client.getClientName())).thenReturn(client);
+
+        //WHEN
+        ClientInfo validClient = clientLicenseService.validationClient(client.getClientName());
+
+        //THEN
+        assertThat(validClient).isNotNull();
+    }
+
+    @Test
+    void GIVEN_non_exist_client_name_WHEN_validationClient_THEN_throw_exception() {
+        //GIVEN
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        when(clientInfoRepository.findByClientName(client.getClientName())).thenReturn(null);
+
+        // WHEN & THEN
+        assertThatThrownBy(() -> clientLicenseService.validationClient(client.getClientName()))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Client " + client.getClientName() + " does not exist in database. You have to create client account!");
+
+        //THEN
+        verify(clientInfoRepository, times(1)).findByClientName(any());
+    }
+
+    @Test
+    void GIVEN_license_WHEN_deleteClientLicenseByNameAndSwName_THEN_returns_void() {
+        //GIVEN
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");
+
+        ClientLicense license = new ClientLicense();
+        license.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license.setStartDate(START_DATE_TEST);
+
+        when(clientLicenseRepository.findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(
+                client.getClientName(), licenseForSW.getSoftwareName()))
+                .thenReturn(license);
+
+        doNothing().when(clientLicenseRepository).deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(client.getClientName(), licenseForSW.getSoftwareName());
+
+        //WHEN
+        clientLicenseService.deleteClientLicenseByNameAndSwName(client.getClientName(), licenseForSW.getSoftwareName());
+
+        //THEN
+        assertAll(() -> clientLicenseService.deleteClientLicenseByNameAndSwName(client.getClientName(), licenseForSW.getSoftwareName()));
+    }
+
+    @Test
+    void GIVEN_non_exist_license_WHEN_deleteClientLicenseByNameAndSwName_THEN_returns_void() {
+        //GIVEN
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");
+
+        ClientLicense license = new ClientLicense();
+        license.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license.setStartDate(START_DATE_TEST);
+
+        when(clientLicenseRepository.findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(
+                client.getClientName(), licenseForSW.getSoftwareName()))
+                .thenReturn(null);
+
+        assertThatThrownBy(() -> clientLicenseService.deleteClientLicenseByNameAndSwName(client.getClientName(), licenseForSW.getSoftwareName()))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Client license doesnt exist in db!");
+        //THEN
+        verify(clientLicenseRepository, times(1)).findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(any(), any());
     }
 }

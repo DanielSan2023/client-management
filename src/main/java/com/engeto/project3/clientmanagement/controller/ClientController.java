@@ -32,7 +32,7 @@ public class ClientController {
         if (client == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else
-            return new ResponseEntity<>(client, HttpStatus.CREATED);
+            return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
     @PutMapping("/{clientName}")

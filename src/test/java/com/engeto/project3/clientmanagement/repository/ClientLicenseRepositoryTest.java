@@ -113,7 +113,7 @@ public class ClientLicenseRepositoryTest {
         assertThat(returnedLicense).isNull();
     }
 
-    @Test//TODO vvgb
+    @Test
     public void GIVEN_two_clientLicenses_WHEN_findByClientlicenseId_THEN_return_correct_license() {
         // GIVEN
         assertThat(clientLicenseRepository.findAll()).isEmpty();

@@ -28,11 +28,12 @@ public class ClientLicenseService {
     final private LicenseForSwRepository licenseRepository;
     private final AESEncryptionDecryption encryptDecrypt;
 
-    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository, AESEncryptionDecryption encryptDecrypt) {
+    public ClientLicenseService(ClientLicenseRepository clientLicenseRepository, ClientInfoRepository clientInfoRepository, LicenseForSwRepository licenseRepository, AESEncryptionDecryption encryptDecrypt, EntityManager entityManager) {
         this.clientLicenseRepository = clientLicenseRepository;
         this.clientInfoRepository = clientInfoRepository;
         this.licenseRepository = licenseRepository;
         this.encryptDecrypt = encryptDecrypt;
+        this.entityManager = entityManager;
     }
 
     @PersistenceContext
@@ -66,7 +67,6 @@ public class ClientLicenseService {
     @Transactional
     public ClientLicenseDto createLicense(ClientLicenseDto clientLicenseDto) {
         validationClientLicenseDto(clientLicenseDto);
-        System.out.println("clientName :" + clientLicenseDto.getName());
         ClientInfo validatedClient = validationClient(clientLicenseDto.getName());
 
         LicenseForSW licenseKeyForSw = createLicenseKeyForSw(clientLicenseDto.getName(), clientLicenseDto.getSoftwareName());
@@ -120,8 +120,12 @@ public class ClientLicenseService {
     @Transactional
     public void deleteClientLicenseByNameAndSwName(String clientName, String swName) {
         ClientLicense clientLicense = clientLicenseRepository.findByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
-        Long licenseId = clientLicense.getClientlicenseId().getLicense().getId();
-        clientLicenseRepository.deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
-        licenseRepository.deleteById(licenseId);
+        if (clientLicense == null) {
+            throw new EntityNotFoundException("Client license doesnt exist in db!");
+        } else {
+            Long licenseId = clientLicense.getClientlicenseId().getLicense().getId();
+            clientLicenseRepository.deleteByClientlicenseId_Client_ClientNameAndClientlicenseId_License_SoftwareName(clientName, swName);
+            licenseRepository.deleteById(licenseId);
+        }
     }
 }
