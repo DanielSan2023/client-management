@@ -33,7 +33,7 @@ public class BatchConfig {
 
     @Bean
     public Step step1(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
-        return new StepBuilder("step2", jobRepository)
+        return new StepBuilder("step1", jobRepository)
                 .<ClientLicense, ClientLicense>chunk(20, platformTransactionManager)
                 .reader(licenseReader)
                 .processor(licenseProcessor)

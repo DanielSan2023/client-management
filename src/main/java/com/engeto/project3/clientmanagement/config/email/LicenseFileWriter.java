@@ -4,6 +4,7 @@ import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
 import com.engeto.project3.clientmanagement.domain.LicenseForSW;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 
+@StepScope
 @Component
 public class LicenseFileWriter implements ItemWriter<ClientLicense> {
 
