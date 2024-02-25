@@ -56,6 +56,7 @@ public class LicenseFileWriterTest {
         Chunk<ClientLicense> listChunk = new Chunk<>(clientLicenses);
 
         LicenseFileWriter licenseFileWriter = new LicenseFileWriter();
+        licenseFileWriter.setFILE_PATH("test.txt");
 
         licenseFileWriter.write(listChunk);
 

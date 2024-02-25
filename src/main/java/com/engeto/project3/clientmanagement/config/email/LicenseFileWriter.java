@@ -4,6 +4,8 @@ import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.domain.ClientLicense;
 import com.engeto.project3.clientmanagement.domain.ClientLicenseId;
 import com.engeto.project3.clientmanagement.domain.LicenseForSW;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -16,9 +18,11 @@ import java.time.LocalDate;
 
 @StepScope
 @Component
+@Getter
+@Setter
 public class LicenseFileWriter implements ItemWriter<ClientLicense> {
 
-    private static final String FILE_PATH = "licenses.txt";
+    private  String FILE_PATH = "licenses.txt";
 
     @Override
     public void write(Chunk<? extends ClientLicense> clientLicenses) throws Exception {
