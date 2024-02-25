@@ -166,6 +166,34 @@ class ClientLicenseServiceTest {
     }
 
     @Test
+    void GIVEN_licenses_WHEN_getAllClientLicensesByClientName_THEN_return_List_clientLicenses_return_licenses() {
+        //GIVEN
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");
+        LicenseForSW licenseForSW2 = new LicenseForSW(2L, "Linux", "someLinuxKey");
+
+        ClientLicenseDto licenseDto = new ClientLicenseDto();
+        ClientLicense license = new ClientLicense();
+        license.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license.setStartDate(LocalDateTime.now());
+
+        ClientLicense license2 = new ClientLicense();
+        license2.setClientlicenseId(new ClientLicenseId(client, licenseForSW2));
+        license2.setStartDate(LocalDateTime.now());
+
+        List<ClientLicense> existLicenses = Arrays.asList(license, license2);
+        when(clientLicenseRepository.findByClientlicenseId_Client_ClientName(client.getClientName())).thenReturn(existLicenses);
+
+        lenient().when(modelMapper.map(any(), any())).thenReturn(licenseDto);
+
+        //WHEN
+        List<ClientLicenseDto> returnedLicenses = clientLicenseService.getAllClientLicensesByClientName(client.getClientName());
+
+        //THEN
+        assertThat(returnedLicenses).hasSize(2);
+    }
+
+    @Test
     void GIVEN_license_WHEN_createLicense_THEN_return_created_licenseDto() {
         ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
         LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someWindowsKey");

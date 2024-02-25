@@ -64,6 +64,14 @@ public class ClientLicenseService {
         return clientsLicensesDto;
     }
 
+    public List<ClientLicenseDto> getAllClientLicensesByClientName(String name) {
+        List<ClientLicense> clientsLicenses = clientLicenseRepository.findByClientlicenseId_Client_ClientName(name);
+        List<ClientLicenseDto> clientsLicensesDto = clientsLicenses.stream()
+                .map(ClientLicenseService::mapClientLicenseToDto)
+                .collect(Collectors.toList());
+        return clientsLicensesDto;
+    }
+
     @Transactional
     public ClientLicenseDto createLicense(ClientLicenseDto clientLicenseDto) {
         validationClientLicenseDto(clientLicenseDto);

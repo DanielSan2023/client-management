@@ -88,7 +88,7 @@ class ClientLicenseControllerTest {
     @Test
     void GIVEN_List_licenses_WHEN_fetchAllClientLicence_THEN_return_list_OK() {
         //GIVEN
-        List<ClientLicenseDto> licenseDtoes = Arrays.asList(new ClientLicenseDto(),new ClientLicenseDto());
+        List<ClientLicenseDto> licenseDtoes = Arrays.asList(new ClientLicenseDto(), new ClientLicenseDto());
         when(clientLicenseService.getAllClientLicenses()).thenReturn(licenseDtoes);
 
         //WHEN
@@ -113,6 +113,35 @@ class ClientLicenseControllerTest {
     }
 
     @Test
+    void GIVEN_List_licenses_WHEN_fetchAllClientLicenceByClientName_THEN_return_list_OK() {
+        //GIVEN
+        String clientName = "someName";
+        List<ClientLicenseDto> licenseDtoes = Arrays.asList(new ClientLicenseDto(), new ClientLicenseDto());
+        when(clientLicenseService.getAllClientLicensesByClientName(clientName)).thenReturn(licenseDtoes);
+
+        //WHEN
+        ResponseEntity<List<ClientLicenseDto>> resultList = clientLicenseController.fetchAllClientLicenceByClientName(clientName);
+
+        //THEN
+        assertThat(resultList.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resultList).isNotNull();
+    }
+
+    @Test
+    void GIVEN_empty_list_licenses_WHEN_fetchAllClientLicenceByClientName_THEN_return_NOT_FOUND() {
+        //GIVEN
+        String clientName = "someName";
+        when(clientLicenseService.getAllClientLicensesByClientName(clientName)).thenReturn(null);
+
+        //WHEN
+        ResponseEntity<List<ClientLicenseDto>> resultList = clientLicenseController.fetchAllClientLicenceByClientName(clientName);
+
+        //THEN
+        assertThat(resultList.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(resultList.getBody()).isNull();
+    }
+
+    @Test
     void GIVEN_licenses_WHEN_deleteClientLicenseByNameAndSwName_THEN_verify() {
         //GIVEN
         ClientLicenseDto licenseDto = new ClientLicenseDto();
@@ -121,6 +150,6 @@ class ClientLicenseControllerTest {
         clientLicenseController.deleteClientLicenseByNameAndSwName(licenseDto.getName(), licenseDto.getSoftwareName());
 
         //THEN
-        verify(clientLicenseService,times(1)).deleteClientLicenseByNameAndSwName(licenseDto.getName(), licenseDto.getSoftwareName());
+        verify(clientLicenseService, times(1)).deleteClientLicenseByNameAndSwName(licenseDto.getName(), licenseDto.getSoftwareName());
     }
 }

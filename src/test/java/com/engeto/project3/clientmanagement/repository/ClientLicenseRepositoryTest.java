@@ -730,4 +730,94 @@ public class ClientLicenseRepositoryTest {
         assertThat(clientLicenseRepository.findAll()).hasSize(3);
         assertThat(returnedLicensesId).isEmpty();
     }
+
+    @Test
+    public void GIVEN_three_licenses_same_client_WHEN_getAllClientLicensesByClientName_THEN_return_List_with_two_licenses() {
+        // GIVEN
+        assertThat(clientLicenseRepository.findAll()).isEmpty();
+
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        clientInfoRepository.save(client);
+
+        ClientInfo client2 = new ClientInfo(2L, "Neo", "Matrix", "MW", "neo@gmail.com");
+        clientInfoRepository.save(client2);
+
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someLicenseKey");
+        licenseForSwRepository.save(licenseForSW);
+
+        LicenseForSW licenseForSW2 = new LicenseForSW(2L, "Matrix", "matrixCode");
+        licenseForSwRepository.save(licenseForSW2);
+
+        LicenseForSW licenseForSW3 = new LicenseForSW(3L, "Linux", "linuxCode");
+        licenseForSwRepository.save(licenseForSW3);
+
+        ClientLicense license1 = new ClientLicense();
+        license1.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license1.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license1);
+
+        ClientLicense license2 = new ClientLicense();
+        license2.setClientlicenseId(new ClientLicenseId(client2, licenseForSW2));
+        license2.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license2);
+
+        ClientLicense license3 = new ClientLicense();
+        license3.setClientlicenseId(new ClientLicenseId(client, licenseForSW3));
+        license3.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license3);
+
+        assertThat(clientLicenseRepository.findAll()).hasSize(3);
+
+        //WHEN
+        List<ClientLicense> returnedLicenses = clientLicenseRepository.findByClientlicenseId_Client_ClientName("Jackson");
+
+        //THEN
+        assertThat(clientLicenseRepository.findAll()).hasSize(3);
+        assertThat(returnedLicenses).hasSize(2);
+    }
+
+    @Test
+    public void GIVEN_two_licenses_invalid_client_name_WHEN_findByClientlicenseId_Client_ClientName_THEN_return_List_empty() {
+        // GIVEN
+        assertThat(clientLicenseRepository.findAll()).isEmpty();
+
+        ClientInfo client = new ClientInfo(1L, "Jackson", "IBM", "LA", "jacksson@gmail.com");
+        clientInfoRepository.save(client);
+
+        ClientInfo client2 = new ClientInfo(2L, "Neo", "Matrix", "MW", "neo@gmail.com");
+        clientInfoRepository.save(client2);
+
+        LicenseForSW licenseForSW = new LicenseForSW(1L, "Windows", "someLicenseKey");
+        licenseForSwRepository.save(licenseForSW);
+
+        LicenseForSW licenseForSW2 = new LicenseForSW(2L, "Matrix", "matrixCode");
+        licenseForSwRepository.save(licenseForSW2);
+
+        LicenseForSW licenseForSW3 = new LicenseForSW(3L, "Linux", "linuxCode");
+        licenseForSwRepository.save(licenseForSW3);
+
+        ClientLicense license1 = new ClientLicense();
+        license1.setClientlicenseId(new ClientLicenseId(client, licenseForSW));
+        license1.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license1);
+
+        ClientLicense license2 = new ClientLicense();
+        license2.setClientlicenseId(new ClientLicenseId(client2, licenseForSW2));
+        license2.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license2);
+
+        ClientLicense license3 = new ClientLicense();
+        license3.setClientlicenseId(new ClientLicenseId(client, licenseForSW3));
+        license3.setStartDate(START_DATE_TEST);
+        clientLicenseRepository.save(license3);
+
+        assertThat(clientLicenseRepository.findAll()).hasSize(3);
+
+        //WHEN
+        List<ClientLicense> returnedLicensesId = clientLicenseRepository.findByClientlicenseId_Client_ClientName("invalidName");
+
+        //THEN
+        assertThat(clientLicenseRepository.findAll()).hasSize(3);
+        assertThat(returnedLicensesId).isEmpty();
+    }
 }

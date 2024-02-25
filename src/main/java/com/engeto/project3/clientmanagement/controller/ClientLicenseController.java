@@ -50,6 +50,16 @@ public class ClientLicenseController {
         }
     }
 
+    @GetMapping("/active/{clientName}")
+    public ResponseEntity<List<ClientLicenseDto>> fetchAllClientLicenceByClientName(@PathVariable String clientName) {
+        List<ClientLicenseDto> activeClientLicense = clientLicenseService.getAllClientLicensesByClientName(clientName);
+        if (CollectionUtils.isEmpty(activeClientLicense)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(activeClientLicense, HttpStatus.OK);
+        }
+    }
+
     @DeleteMapping("/{clientName}/{swName}")
     public void deleteClientLicenseByNameAndSwName(@PathVariable String clientName, @PathVariable String swName) {
         clientLicenseService.deleteClientLicenseByNameAndSwName(clientName, swName);

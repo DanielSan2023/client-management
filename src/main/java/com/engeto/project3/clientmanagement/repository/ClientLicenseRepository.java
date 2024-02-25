@@ -26,6 +26,8 @@ public interface ClientLicenseRepository extends JpaRepository<ClientLicense, Cl
     @Query("SELECT cl.clientlicenseId.license.id FROM ClientLicense cl " +
             "WHERE cl.clientlicenseId.client.id = (SELECT c.id FROM ClientInfo c WHERE c.clientName = :clientName)")
     List<Long> findAllLicenseIdByClientName(@Param("clientName") String clientName);
+
+    List<ClientLicense> findByClientlicenseId_Client_ClientName(String clientName);
 }
 
 
