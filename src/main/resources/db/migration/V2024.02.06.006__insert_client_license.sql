@@ -1,0 +1,12 @@
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 1,1, '2024-02-06 12:00:00');
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 2,2, '2024-02-06 12:00:00');
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 3,3, '2024-02-06 12:00:00');
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 1,4, '2024-02-06 12:10:00');
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 2,5, '2024-02-06 12:10:00');
+INSERT INTO CLIENT_LICENSE( client_info_id,license_id, START_DATE)
+VALUES ( 3,6, '2024-02-06 12:10:00');

@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS client_Info
     client_name  VARCHAR(255),
     company_name VARCHAR(255),
     address     VARCHAR(255),
+    email       VARCHAR(255),
     CONSTRAINT pk_client_info PRIMARY KEY (id)
 );

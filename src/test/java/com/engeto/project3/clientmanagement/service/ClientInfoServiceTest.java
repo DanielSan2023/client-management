@@ -4,6 +4,7 @@ import com.engeto.project3.clientmanagement.domain.ClientInfo;
 import com.engeto.project3.clientmanagement.dto.ClientDto;
 import com.engeto.project3.clientmanagement.repository.ClientInfoRepository;
 import com.engeto.project3.clientmanagement.repository.ClientLicenseRepository;
+import com.engeto.project3.clientmanagement.repository.LicenseForSwRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,8 @@ class ClientInfoServiceTest {
 
     @Mock
     private ClientInfoRepository clientInfoRepository;
+    @Mock
+    private LicenseForSwRepository licenseForSwRepository;
 
     @Mock
     private ClientLicenseRepository clientLicenseRepository;
@@ -121,22 +124,26 @@ class ClientInfoServiceTest {
     }
 
     @Test
-    void GIVEN_client_name_WHEN_deleteClient_THEN_remove_client_license_sw_license() {
+    void GIVEN_client_name_WHEN_deleteClient_THEN_remove_client_by_name() {
         // GIVEN
         ClientDto clientDto = new ClientDto(1L, "Neo", "Matrix", "Universe", "neo@matric.net");
         ClientInfo client = new ClientInfo(1L, "Neo", "MatrixReloaded", "Universe", "neo@matric.net");
         String clientName = "Neo";
 
         List<Long> licenseIds = Arrays.asList(1L, 2L, 3L);
+
         when(clientLicenseRepository.findAllLicenseIdByClientName(clientName)).thenReturn(licenseIds);
+        when(clientInfoRepository.findByClientName(clientName)).thenReturn(null);
 
         // WHEN
-        doNothing().when(clientInfoRepository).delete(client);
-        clientInfoService.deleteClient(clientName);
+        doNothing().when(clientLicenseRepository).deleteAllByClientlicenseId_Client_ClientName(clientName);
+        ClientInfo existClient = clientInfoService.deleteClient(clientName);
 
         // THEN
-        //        verify(clientInfoRepository, times(1)).deleteByClientName(clientName);
-        //        verify(clientInfoRepository, times(1)).delete(any());
-    } //TODO fixit delete method
+        verify(clientLicenseRepository, times(1)).deleteAllByClientlicenseId_Client_ClientName(any());
+        verify(clientInfoRepository, times(1)).deleteByClientName(clientName);
+        verify(licenseForSwRepository, times(1)).deleteByIdIn(any());
 
+        assertThat(existClient).isNull();
+    }
 }

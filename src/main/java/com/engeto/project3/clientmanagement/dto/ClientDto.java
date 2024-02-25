@@ -25,4 +25,11 @@ public class ClientDto {
 
     @Size(max = 255)
     private String email;
+
+    public ClientDto(String clientName, String companyName, String address, String email) {
+        this.clientName = clientName;
+        this.companyName = companyName;
+        this.address = address;
+        this.email = email;
+    }
 }

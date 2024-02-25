@@ -63,54 +63,6 @@ public class ClientInfoRepositoryTest {
         assertThat(clientInfoRepository.findAll()).hasSize(1);
         assertThat(returnedClient.getClientName()).isEqualTo(correctName);
     }
-    //TODO fixit tests with insensitive case
-//    @Test
-//    void GIVEN_client_name_with_big_case_WHEN_findByClientName_THEN_return_client_object() {
-//        //GIVEN
-//        assertThat(clientInfoRepository.findAll()).isEmpty();
-//        ClientInfo client = new ClientInfo("Jackson", "IBM", "LA", "jacksson@gmail.com");
-//        String bigCaseName = "JACKSON";
-//        clientInfoRepository.save(client);
-//
-//        //WHEN
-//        ClientInfo returnedClient = clientInfoRepository.findByClientName(bigCaseName);
-//
-//        //THEN
-//        assertThat(clientInfoRepository.findAll()).hasSize(1);
-//        assertThat(returnedClient.getClientName()).isEqualTo(bigCaseName);
-//    }
-//
-//    @Test
-//    void GIVEN_client_name_with_small_case_WHEN_findByClientName_THEN_return_client_object() {
-//        //GIVEN
-//        assertThat(clientInfoRepository.findAll()).isEmpty();
-//        ClientInfo client = new ClientInfo("Jackson", "IBM", "LA", "jacksson@gmail.com");
-//        String smallCaseName = "jackson";
-//        clientInfoRepository.save(client);
-//
-//        //WHEN
-//        ClientInfo returnedClient = clientInfoRepository.findByClientName(smallCaseName);
-//
-//        //THEN
-//        assertThat(clientInfoRepository.findAll()).hasSize(1);
-//        assertThat(returnedClient.getClientName()).isEqualTo(smallCaseName);
-//    }
-//
-//    @Test
-//    void GIVEN_client_name_with_ignore_case_WHEN_findByClientName_THEN_return_client_object() {
-//        //GIVEN
-//        assertThat(clientInfoRepository.findAll()).isEmpty();
-//        ClientInfo client = new ClientInfo("Jackson", "IBM", "LA", "jacksson@gmail.com");
-//        String ignoreCaseName = "Jackon";
-//        clientInfoRepository.save(client);
-//
-//        //WHEN
-//        ClientInfo returnedClient = clientInfoRepository.findByClientName(ignoreCaseName);
-//
-//        //THEN
-//        assertThat(clientInfoRepository.findAll()).hasSize(1);
-//        assertThat(returnedClient.getClientName()).isEqualTo(ignoreCaseName);
-//    }
 
     @Test
     void GIVEN_empty_DB_WHEN_existsByClientNameIgnoreCase_THEN_false() {
