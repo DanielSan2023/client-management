@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Restaurant Management System is a Spring Boot-based application that provides
+The License Management System is a Spring Boot-based application that provides
 a set of CRUD (Create, Read, Update, Delete) operations for managing clients,license of software(sw)
 with license key for specific sw and client license. Its used relations in database.
 These license keys are generating regularly on Monday midnight and are sending on clients by email.
@@ -38,6 +38,8 @@ The project utilizes the following dependencies:
 - **Spring Boot Starter Test (For Testing)**: Provides support for testing Spring Boot applications.
 
 - **Spring Boot Starter Validation**: Includes validation support for request data binding and response data rendering.
+
+- **Batch Processing:** Batch processes are an extremely efficient way of processing large amounts of data
 
 - **JavaMail API**: Used for sending emails.
 
